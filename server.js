@@ -9,6 +9,11 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const client = new Deepgram(process.env.DEEPGRAM_API_KEY);
+
+const { Client } = require("@notionhq/client");
+
+const notion = new Client({ auth: process.env.NOTION_API_KEY })
+
 let keepAlive;
 
 const setupDeepgram = (socket) => {
