@@ -1,52 +1,116 @@
+<!-- served from your routes in server.js -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Deepgram Test</title>
-    <script
-      src="https://cdn.socket.io/4.5.3/socket.io.min.js"
-      integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<html lang="en">
 
-  <body class="">
-    <div class="box">
-      <div class="object" id="record">
-        <div class="outline"></div>
-        <div class="outline" id="delayed"></div>
-        <div class="button"></div>
-        <div class="button" id="circlein">
-          <svg
-            class="mic-icon"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="0 0 1000 1000"
-            enable-background="new 0 0 1000 1000"
-            xml:space="preserve"
-            style="fill:#000000"
-          >
-            <g>
-              <path
-                d="M500,683.8c84.6,0,153.1-68.6,153.1-153.1V163.1C653.1,78.6,584.6,10,500,10c-84.6,0-153.1,68.6-153.1,153.1v367.5C346.9,615.2,415.4,683.8,500,683.8z M714.4,438.8v91.9C714.4,649,618.4,745,500,745c-118.4,0-214.4-96-214.4-214.4v-91.9h-61.3v91.9c0,141.9,107.2,258.7,245,273.9v124.2H346.9V990h306.3v-61.3H530.6V804.5c137.8-15.2,245-132.1,245-273.9v-91.9H714.4z"
-              />
-            </g>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="captions" id="captions">
-      <span>Captions by Deepgram</span>
-    </div>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Notion internal integration example" />
 
-    <script src="client.js"></script>
-  </body>
+  <title>Notion integration demo</title>
+  <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+    integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+    crossorigin="anonymous"></script>
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- import the webpage's client-side javascript file -->
+  <script src="/client.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <h1>Notion internal integration demo</h1>
+  </header>
+
+  <main>
+    <h2>Goals</h2>
+    <p>
+      Use this demo to see how to incorporate Notion's public API into your
+      app. Build on this demo as needed to meet your own app's requirements!
+    </p>
+    <p>
+      Open the Notion page set in your environment variables to see workspace
+      updates in real-time. :)
+    </p>
+    <table>
+      <tr>
+        <th>Step</th>
+        <th>Response</th>
+      </tr>
+      <tr>
+        <td>
+          <h3>1. Create a new database</h3>
+          <form id="databaseForm">
+            <label for="dbName">Database name</label>
+            <input type="text" id="dbName" />
+            <input type="submit" />
+          </form>
+        </td>
+        <!-- The database form response will be appended here after submitting it -->
+        <td id="dbResponse"></td>
+      </tr>
+      <tr>
+        <td>
+          <h3>2. Add a page to the database</h3>
+          <form id="pageForm">
+            <label for="newPageDB">Parent DB ID</label>
+            <input type="text" id="newPageDB" />
+            <label for="newPageName">New page name</label>
+            <input type="text" id="newPageName" />
+            <label for="header">Header 1</label>
+            <input type="text" id="header" />
+            <input type="submit" />
+          </form>
+        </td>
+        <!-- The page form response will be appended here after submitting it -->
+        <td id="pageResponse"></td>
+      </tr>
+      <tr>
+        <td>
+          <h3>3. Add content to the page</h3>
+          <form id="blocksForm">
+            <label for="pageID">Page ID</label>
+            <input type="text" id="pageID" />
+            <label for="content">Content</label>
+            <input type="text" id="content" />
+            <input type="submit" />
+          </form>
+        </td>
+        <!-- The page content/blocks form response will be appended here after submitting it -->
+        <td id="blocksResponse"></td>
+      </tr>
+      <tr>
+        <td>
+          <h3>4. Add a comment to the content</h3>
+          <form id="commentForm">
+            <label for="pageIDComment">Page ID</label>
+            <input type="text" id="pageIDComment" />
+            <label for="comment">Comment</label>
+            <input type="text" id="comment" />
+            <input type="submit" />
+          </form>
+        </td>
+        <!-- The comment form response will be appended here after submitting it -->
+        <td id="commentResponse"></td>
+      </tr>
+      <tr>
+        <td>
+          <h3>5. Record and transcribe meeting notes</h3>
+          <form id="transcribeForm">
+            <label for="transcript">Transcript</label>
+            <textarea id="transcript"></textarea>
+            <button id="record">Start/Stop Recording</button>
+            <input type="submit" />
+          </form>
+        </td>
+        <!-- The transcription will be displayed here after recording -->
+        <td id="transcribeResponse"></td>
+      </tr>
+      <div id="transcriptDiv"></div>
+    </table>
+  </main>
+</body>
+
 </html>

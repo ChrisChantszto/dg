@@ -10,8 +10,8 @@ const server = http.createServer(app);
 const io = new Server(server);
 const client = new Deepgram(process.env.DEEPGRAM_API_KEY);
 
+// Notion SDK for javascript
 const { Client } = require("@notionhq/client");
-
 const notion = new Client({ auth: process.env.NOTION_API_KEY })
 
 let keepAlive;
@@ -99,10 +99,46 @@ io.on("connection", (socket) => {
 });
 
 app.use(express.static("public/"));
+app.use(express.json())
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
+});
+
+app.post("/databases", async function (request, response) {
+  const pageId = process.env.NOTION_PAGE_ID;
+  const title = request.body.dbName;
+
+  try {
+// Notion API request!
+    const newDb = await notion.databases.create({
+      parent: {
+        type: "page_id",
+        page_id: pageId,
+      },
+      title: [
+        {
+          type: "text",
+          text: {
+            content: title,
+          },
+        },
+      ],
+      properties: {
+        Name: {
+          title: {},
+        },
+      },
+    });
+    response.json({ message: "success!", data: newDb });
+  } catch (error) {
+    response.json({ message: "error", error });
+  }
 });
 
 server.listen(3000, () => {
   console.log("listening on localhost:3000");
 });
+
+const listener = app.listen(process.env.PORT, function() {
+  console.log("Your app is listening on port (notion) " + listener.address().port);
+})
