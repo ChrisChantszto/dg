@@ -79,7 +79,9 @@ window.addEventListener("load", () => {
   });
 
   socket.on("transcript", (transcript) => {
-    transcriptArea.value += transcript + "\n";
+    /** transcriptArea.value += transcript + "\n"; **/
+    var currentContent = quill.getText();
+    quill.setText(currentContent + transcript + '\n');
     console.log(transcript);
   });
 });
