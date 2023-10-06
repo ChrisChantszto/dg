@@ -9,12 +9,14 @@ const dbForm = document.getElementById("databaseForm")
 const pageForm = document.getElementById("pageForm")
 const blocksForm = document.getElementById("blocksForm")
 const commentForm = document.getElementById("commentForm")
+const transcribeForm = document.getElementById("transcribeForm");
 
 // Table cells where API responses will be appended
 const dbResponseEl = document.getElementById("dbResponse")
 const pageResponseEl = document.getElementById("pageResponse")
 const blocksResponseEl = document.getElementById("blocksResponse")
 const commentResponseEl = document.getElementById("commentResponse")
+const transcribeResponseEl = document.getElementById("transcribeResponse");
 
 const transcriptArea = document.getElementById("transcript");
 
@@ -80,8 +82,7 @@ window.addEventListener("load", () => {
 
   socket.on("transcript", (transcript) => {
     /** transcriptArea.value += transcript + "\n"; **/
-    var currentContent = quill.getText();
-    quill.setText(currentContent + transcript + '\n');
+    transcriptArea.value += transcript + "\n";
     console.log(transcript);
   });
 });
@@ -172,14 +173,36 @@ pageForm.onsubmit = async function (event) {
   appendApiResponse(newPageData, pageResponseEl)
 }
 
-blocksForm.onsubmit = async function (event) {
+transcribeForm.onsubmit = async function (event) {
   event.preventDefault()
 
+  // Get page ID and transcript content
   const pageID = event.target.pageID.value
-  const content = event.target.content.value
-  const body = JSON.stringify({ pageID, content })
+  const transcript = event.target.transcript.value
 
-  const newBlockResponse = await fetch("/blocks", {
+  console.log(pageID)
+  // Format the body to match the structure expected by the Notion API
+  const body = JSON.stringify({
+    "children": [
+      {
+        "object": "block",
+        "type": "paragraph",
+        "paragraph": {
+          "rich_text": [
+            {
+              "type": "text",
+              "text": {
+                "content": transcript
+              }
+            }
+          ]
+        }
+      }
+    ]
+  })
+
+  // Send the POST request to the appropriate endpoint
+  const newTranscriptionResponse = await fetch(`/blocks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -187,25 +210,9 @@ blocksForm.onsubmit = async function (event) {
     body,
   })
 
-  const newBlockData = await newBlockResponse.json()
-  appendBlocksResponse(newBlockData, blocksResponseEl)
-}
+  // Convert the response to JSON
+  const newTranscriptionData = await newTranscriptionResponse.json()
 
-commentForm.onsubmit = async function (event) {
-  event.preventDefault()
-
-  const pageID = event.target.pageIDComment.value
-  const comment = event.target.comment.value
-  const body = JSON.stringify({ pageID, comment })
-
-  const newCommentResponse = await fetch("/comments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body,
-  })
-
-  const newCommentData = await newCommentResponse.json()
-  appendApiResponse(newCommentData, commentResponseEl)
+  // Append the response to the UI
+  appendApiResponse(newTranscriptionData, transcribeResponseEl)
 }

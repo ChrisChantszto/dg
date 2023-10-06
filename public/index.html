@@ -69,14 +69,12 @@
         <!-- The page form response will be appended here after submitting it -->
         <td id="pageResponse"></td>
       </tr>
-      <tr>
-        <td>
-          <h3>3. Speech to text contents</h3>
-          <!-- Include the Quill stylesheet -->
+      <h3>3. Speech to text contents</h3>
+      <!-- Include the Quill stylesheet -->
 
 
-          <!-- Create the editor container -->
-          <!--
+      <!-- Create the editor container -->
+      <!--
       <tr>
         <td>
           <h3>3. Add content to the page</h3>
@@ -89,7 +87,7 @@
           </form>
         </td>
          The page content/blocks form response will be appended here after submitting it -->
-          <!--
+      <!--
         <td id="blocksResponse"></td>
       </tr>
       <tr>
@@ -107,13 +105,15 @@
         <td id="commentResponse"></td>
       </tr>
         -->
-          <!--
+      
       <tr>
         <td>
           <h3>5. Record and transcribe meeting notes</h3>
           <form id="transcribeForm">
+            <label for="pageID">Page ID</label>
+            <input type="text" id="pageID" />
             <label for="transcript">Transcript</label>
-            <textarea id="transcript"></textarea>
+            <textarea id="transcript" type="text"></textarea>
             <div id="record" style="cursor: pointer; padding: 10px; border: 1px solid #000;">
               Start/Stop Recording
             </div>
@@ -123,26 +123,28 @@
         The transcription will be displayed here after recording 
         <td id="transcribeResponse"></td>
       </tr>
-      <div id="transcriptDiv"></div> -->
+      <div id="transcriptDiv"></div>
     </table>
-    <form id="blocksForm">
-      <label for="pageID">Page ID</label>
-      <input type="text" id="pageID" />
-      <div id="transcript">
-        <p>Hello World!</p>
-        <p>Some initial <strong>bold</strong> text</p>
-        <p><br></p>
-      </div>
-      <br />
-      <div id="record" style="cursor: pointer; padding: 10px; border: 1px solid #000;">
-        Start/Stop Recording
-      </div>
-      <input type="submit" />
-    </form>
-    <br />
-    <div id="blocksResponse"></div>
+    <!-- <div style="width: 100%;">
+      <section>
+          <label for="pageID">Page ID</label>
+          <input type="text" id="pageID" />
+          <div id="transcript">
+            <p>Hello World!</p>
+            <p>Some initial <strong>bold</strong> text</p>
+            <p><br></p>
+          </div>
+          <br />
+          <div id="record" style="cursor: pointer; padding: 10px; border: 1px solid #000;">
+            Start/Stop Recording
+          </div>
+          <input type="submit" />
+        <br />
+        <div id="blocksResponse"></div>
 
-    <!-- Initialize Quill editor -->
+      </section>
+    </div>
+    Initialize Quill editor 
     <script>
       var quill = new Quill('#transcript', {
         theme: 'snow',
@@ -165,10 +167,7 @@
         },
 
       });
-    </script>
-    </td>
-    </tr>
-
+    </script> -->
   </main>
 </body>
 

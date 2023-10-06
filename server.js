@@ -180,7 +180,7 @@ app.post("/pages", async function (request, response) {
 
 // Create new block (page content). The page ID is provided in the web form.
 app.post("/blocks", async function (request, response) {
-  const { pageID, content } = request.body
+  const { pageID, transcript } = request.body
 
   try {
     const newBlock = await notion.blocks.children.append({
@@ -191,8 +191,9 @@ app.post("/blocks", async function (request, response) {
           paragraph: {
             rich_text: [
               {
+                type: "text",
                 text: {
-                  content: content,
+                  content: transcript,
                 },
               },
             ],
